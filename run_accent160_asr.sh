@@ -76,7 +76,7 @@ if [ ! -z $step01 ]; then
    echo "extracting filter-bank features and cmvn"
     for i in $train_set $valid_set $recog_set;do 
       utils/fix_data_dir.sh $data/$i
-      steps/make_fbank.sh --cmd "$cmd" --nj $nj --write_utt2num_frames true \
+      steps/make_fbank_pitch.sh --cmd "$cmd" --nj $nj --write_utt2num_frames true \
           $data/$i $data/$i/feats/log $data/$i/feats/ark
       utils/fix_data_dir.sh $data/$i
    done
