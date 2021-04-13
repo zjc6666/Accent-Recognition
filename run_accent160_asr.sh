@@ -7,9 +7,9 @@
 . ./cmd.sh || exit 1;
 
 
-cuda_cmd="slurm.pl --quiet --exclude=node0[3-5]"
-decode_cmd="slurm.pl --quiet --exclude=node0[1-4,9]"
-cmd="slurm.pl --quiet --exclude=node0[3-4]"
+cuda_cmd="slurm.pl --quiet"
+decode_cmd="slurm.pl --quiet"
+cmd="slurm.pl --quiet"
 # general configuration
 backend=pytorch
 steps=1
@@ -157,7 +157,7 @@ fi
 
 if [ ! -z $step07 ]; then
     train_set=train
-    expname=${train_set}_12enc_6dec_verification_${backend}
+    expname=${train_set}_12enc_6dec_${backend}
     expdir=$exp/${expname}
     epoch_stage=0
     mkdir -p ${expdir}
