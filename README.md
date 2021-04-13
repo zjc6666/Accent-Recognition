@@ -5,7 +5,7 @@
 # Environment dependent
   1. Kaldi (Data preparation related function script) [Github link](https://github.com/kaldi-asr/kaldi)
   2. Espnet  [Githhub link](https://github.com/espnet/espnet)
-  3. Google SentencePiece  [Github link](https://github.com/google/sentencepiece)
+  3. Google SentencePiece(pip3 install sentencepiece)  [Github link](https://github.com/google/sentencepiece)
   4. Modify the installation address of espnet in the path.sh file
   
 # Instructions for use
