@@ -26,9 +26,7 @@ bpemode=bpe
 # feature configuration
 do_delta=false
 
-train_config=conf/espnet_train.yaml
 train_track1_config=conf/e2e_asr_transformer_only_accent.yaml
-lm_config=conf/espnet_lm.yaml
 decode_config=conf/espnet_decode.yaml
 preprocess_config=conf/espnet_specaug.yaml
 
@@ -139,7 +137,7 @@ if [ ! -z $step4 ]; then
         resume=${exp}/${expname}/results/snapshot.ep.${epoch_stage}
     fi
     train_track1_config=conf/e2e_asr_transformer_only_accent.yaml
-    ## attention network, if you want to use attention to replace
+    ## attention network, if you want to use attention to replace std+mean layer, you can cancel the comment
     # train_track1_config=conf/e2e_asr_transformer_only_accent_with_attention.yaml
     ${cuda_cmd} --gpu ${ngpu} ${expdir}/train.log \
         asr_train.py \
