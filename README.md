@@ -31,32 +31,32 @@
     You can control the steps by changing the value of the step variable. 
     egs: 
 ```
-      bash run_only_accent.sh --nj 20 --steps 1-2
-      bash run_only_accent.sh --nj 20 --steps 3
-      bash run_only_accent.sh --nj 20 --steps 4
-      bash run_only_accent.sh --nj 20 --steps 5
-      bash run_only_accent.sh --nj 20 --steps 6
+bash run_only_accent.sh --nj 20 --steps 1-2
+bash run_only_accent.sh --nj 20 --steps 3
+bash run_only_accent.sh --nj 20 --steps 4
+bash run_only_accent.sh --nj 20 --steps 5
+bash run_only_accent.sh --nj 20 --steps 6
 ```
 ## Transformer ASR system
     The purpose of training the asr model is to initialize the accent recogniton model.
     Because ASR training is no different from normal transformer training, there is no need to prepare additional model files.
     You can directly execute the `run_accent160_asr.sh` script step by step.
     Features can directly use the features of single accent system(steps 01-02).
-    
-      bash run_only_accent.sh --nj 20 --steps 1-2
-      bash run_only_accent.sh --nj 20 --steps 3
-      bash run_only_accent.sh --nj 20 --steps 4
-      bash run_only_accent.sh --nj 20 --steps 5
-      bash run_only_accent.sh --nj 20 --steps 7
-      bash run_only_accent.sh --nj 20 --steps 8
-      bash run_only_accent.sh --nj 20 --steps 9
-
+```   
+bash run_only_accent.sh --nj 20 --steps 1-2
+bash run_only_accent.sh --nj 20 --steps 3
+bash run_only_accent.sh --nj 20 --steps 4
+bash run_only_accent.sh --nj 20 --steps 5
+bash run_only_accent.sh --nj 20 --steps 7
+bash run_only_accent.sh --nj 20 --steps 8
+bash run_only_accent.sh --nj 20 --steps 9
+```
 ## notice
-
-  All scripts have three inputs: data exp step <br>
-  data: Directory for storing data preparation <br>
-  exp: Output directory during training <br>
-  steps: Control execution parameters <br>
-  
+```
+All scripts have three inputs: data exp step <br>
+data: Directory for storing data preparation <br>
+exp: Output directory during training <br>
+steps: Control execution parameters <br>
+```  
   For librispeech data, you can prepare librispeech data into kaldi format, and then mix it with accent data to train the asr system
   
