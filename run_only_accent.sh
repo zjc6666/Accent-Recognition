@@ -138,7 +138,9 @@ if [ ! -z $step4 ]; then
         echo "stage 6: Resume network from epoch ${epoch_stage}"
         resume=${exp}/${expname}/results/snapshot.ep.${epoch_stage}
     fi
-    train_track1_config=conf/track1_accent_transformer.yaml
+    train_track1_config=conf/e2e_asr_transformer_only_accent.yaml
+    ## attention network, if you want to use attention to replace
+    # train_track1_config=conf/e2e_asr_transformer_only_accent_with_attention.yaml
     ${cuda_cmd} --gpu ${ngpu} ${expdir}/train.log \
         asr_train.py \
         --config ${train_track1_config} \
