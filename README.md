@@ -6,7 +6,8 @@
   1. Kaldi (Data preparation related function script) [Github link](https://github.com/kaldi-asr/kaldi)
   2. Espnet  [Githhub link](https://github.com/espnet/espnet)
   3. Google SentencePiece  [Github link](https://github.com/google/sentencepiece)
-  Modify the installation address of espnet in the path.sh file
+  4. Modify the installation address of espnet in the path.sh file
+  
 # Instructions for use
 ## Data preparation
     All the data used in the experiment are stored in the `data` directory, in which train is used for training, valid is the verification set, 
