@@ -7,9 +7,9 @@
 . ./cmd.sh || exit 1;
 
 
-cuda_cmd="slurm.pl --quiet --exclude=node0[3-5]"
-decode_cmd="slurm.pl --quiet --exclude=node0[1-4,9]"
-cmd="slurm.pl --quiet --exclude=node0[3-4]"
+cuda_cmd="slurm.pl --quiet"
+decode_cmd="slurm.pl --quiet"
+cmd="slurm.pl --quiet"
 # general configuration
 backend=pytorch
 steps=1
@@ -157,7 +157,7 @@ fi
 
 if [ ! -z $step07 ]; then
     train_set=train
-    expname=${train_set}_12enc_6dec_verification_${backend}
+    expname=${train_set}_12enc_6dec_${backend}
     expdir=$exp/${expname}
     epoch_stage=0
     mkdir -p ${expdir}
@@ -189,7 +189,7 @@ fi
 # pretraind model 
 pretrained_model=/home/maison2/lid/zjc/w2020/AESRC2020/result/librispeech960-asr/libspeech960_12enc_6dec_pytorch/results/model.val5.avg.best
 expdir=$exp/${expname}
-if [ ! -z $step14 ]; then
+if [ ! -z $step08 ]; then
     epoch_stage=0
     train_set=train
     expname=${train_set}_12enc_6dec_init_accent_and_libri_${backend}
@@ -224,7 +224,7 @@ if [ ! -z $step14 ]; then
                 --enc-init-mods='encoder.'
 fi
 
-if [ ! -z $step16 ]; then
+if [ ! -z $step09 ]; then
     echo "stage 3: Decoding"
     nj=100
     for expname in train_12enc_6dec_verification_pytorch;do
@@ -236,7 +236,7 @@ if [ ! -z $step16 ]; then
         # Average ASR models
         if ${use_valbest_average}; then
             [ -f ${expdir}/results/model.val5.avg.best ] && rm ${expdir}/results/model.val5.avg.best
-            recog_model=model.val${n_average}_${log_step}.avg.best
+            recog_model=model.val${n_average}.avg.best
             opt="--log ${expdir}/results/log"
         else
             [ -f ${expdir}/results/model.last5.avg.best ] && rm ${expdir}/results/model.last5.avg.best
@@ -283,4 +283,3 @@ if [ ! -z $step16 ]; then
     # done
     echo "Finished"
 fi
-

@@ -25,7 +25,7 @@ dropout-rate: 0.1
 
 # transformer specific setting
 backend: pytorch
-model-module: "espnet.nets.pytorch_backend.track1_accent_transformer:E2E"
+model-module: "espnet.nets.pytorch_backend.e2e_asr_transformer_only_accent_with_attention:E2E"
 transformer-input-layer: conv2d     # encoder architecture type
 transformer-lr: 5.0
 transformer-warmup-steps: 25000

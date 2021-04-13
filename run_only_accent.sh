@@ -7,9 +7,9 @@
 . ./cmd.sh || exit 1;
 
 
-cuda_cmd="slurm.pl --quiet --exclude=node0[2-7]"
-decode_cmd="slurm.pl --quiet --exclude=node0[1-4,8]"
-cmd="slurm.pl --quiet --exclude=node0[1-4]"
+cuda_cmd="slurm.pl --quiet"
+decode_cmd="slurm.pl --quiet"
+cmd="slurm.pl --quiet"
 # general configuration
 backend=pytorch
 steps=1
@@ -26,9 +26,7 @@ bpemode=bpe
 # feature configuration
 do_delta=false
 
-train_config=conf/espnet_train.yaml
 train_track1_config=conf/e2e_asr_transformer_only_accent.yaml
-lm_config=conf/espnet_lm.yaml
 decode_config=conf/espnet_decode.yaml
 preprocess_config=conf/espnet_specaug.yaml
 
@@ -58,7 +56,6 @@ set -e
 set -o pipefail
 
 . utils/parse_options.sh || exit 1;
-. path2.sh
 
 steps=$(echo $steps | perl -e '$steps=<STDIN>;  $has_format = 0;
   if($steps =~ m:(\d+)\-$:g){$start = $1; $end = $start + 10; $has_format ++;}
@@ -76,16 +73,16 @@ if [ ! -z "$steps" ]; then
   done
 fi
 
-data=$1 # data
-exp=$2 # exp-espnet-epoch-50
+data=$1 # 
+exp=$2 # 
 train_set="train"
 recog_set="cv_all test"
 valid_set="valid"
-# recog_set="cv/UK cv/US cv/CHN cv/JPN cv/KR cv/RU cv/IND cv/PT"
+
 
 if [ ! -z $step01 ]; then
    echo "extracting filter-bank features and cmvn"
-   for i in $recog_set $valid_set $train_set;do # $train_dev $recog_set;do
+   for i in $recog_set $valid_set $train_set;do
       utils/fix_data_dir.sh $data/$i
       steps/make_fbank_pitch.sh --cmd "$cmd" --nj $nj --write_utt2num_frames true \
           $data/$i $data/$i/feats/log $data/$i/feats/ark
@@ -96,32 +93,40 @@ if [ ! -z $step01 ]; then
    echo "step01 Extracting filter-bank features and cmvn Done"
 fi
 
-### prepare for track1
-if [ ! -z $step06 ]; then
-    for x in $train_set $valid_set $recog_set;do
-        awk '{printf "%s %s\n", $1, $1 }' $data/$x/text > $data/$x/spk2utt.utt
-        cp $data/$x/spk2utt.utt $data/$x/utt2spk.utt
-        compute-cmvn-stats --spk2utt=ark:$data/$x/spk2utt.utt scp:$data/$x/feats.scp \
-            ark,scp:$data/$x/cmvn_utt.ark,$data/$x/cmvn_utt.scp
-        local/tools/dump_spk_yzl23.sh --cmd "$cmd" --nj 20 \
-            $data/$x/feats.scp $data/$x/cmvn_utt.scp \
-            $data/$x/dump_utt/log $data/$x/dump_utt $data/$x/utt2spk.utt
-    done
-    echo "### step 06 dump utt Done"
-fi
-### prepare for track1
-if [ ! -z $step07 ]; then
-    for x in $recog_set $valid_set;do
-        local/tools/data2json.sh --nj 20 --cmd "$cmd" --feat $data/$x/dump_utt/feats.scp --text $data/$x/utt2accent --oov 8 $data/$x $data/lang/accent.dict > $data/$x/${train_set}_accent.json
-    done
+if [ ! -z $step02 ]; then
+   echo "dump features :E2E"
+
+   for x in ${train_set} ;do
+       dump.sh --cmd "$cmd" --nj $nj  --do_delta false \
+          $data/$x/feats.scp $data/${train_set}/cmvn.ark $data/$x/dump/log $data/$x/dump 
+   done
+
+   for x in ${valid_set} $recog_set;do 
+       dump.sh --cmd "$cmd" --nj $nj  --do_delta false \
+          $data/$x/feats.scp $data/${train_set}/cmvn.ark $data/$x/dump_${train_set}/log $data/$x/dump_${train_set}
+   done
+   echo "step02 dump features for track2:E2E Done"   
 fi
 
 dict=$data/lang/accent.dict
+### prepare for track1
+if [ ! -z $step03 ]; then
+    # make json labels
+    data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${train_set}/dump/feats.scp  \
+       --text $data/$x/utt2accent --oov 8 $data/$x ${dict} > ${data}/${train_set}/${train_set}_accent.json
+
+    for i in $recog_set $valid_set;do 
+       data2json.sh --nj 10 --cmd "${cmd}" --feat $data/$i/dump_${train_set}/feats.scp \
+           --text $data/$x/utt2accent --oov 8 $data/$x ${dict} > ${data}/$i/${train_set}_accent.json
+    done
+    echo "stage 04: Make Json Labels Done"
+fi
+
 epochs=30
-if [ ! -z $step10 ]; then
+if [ ! -z $step4 ]; then
     train_set=train
     elayers=3
-    expname=${train_set}_${elayers}_layers_verification_${backend}
+    expname=${train_set}_${elayers}_layers_${backend}
     expdir=$exp/${expname}
     epoch_stage=0
     mkdir -p ${expdir}
@@ -131,7 +136,9 @@ if [ ! -z $step10 ]; then
         echo "stage 6: Resume network from epoch ${epoch_stage}"
         resume=${exp}/${expname}/results/snapshot.ep.${epoch_stage}
     fi
-    train_track1_config=conf/track1_accent_transformer.yaml
+    train_track1_config=conf/e2e_asr_transformer_only_accent.yaml
+    ## attention network, if you want to use attention to replace std+mean layer, you can cancel the comment
+    # train_track1_config=conf/e2e_asr_transformer_only_accent_with_attention.yaml
     ${cuda_cmd} --gpu ${ngpu} ${expdir}/train.log \
         asr_train.py \
         --config ${train_track1_config} \
@@ -159,7 +166,7 @@ fi
 
 # pretrained asr model
 pretrained_model=/home/maison2/lid/zjc/w2020/AESRC2020/result/track2-accent-160/train_12enc_6dec_pytorch/results/model.val5.avg.best
-if [ ! -z $step13 ]; then
+if [ ! -z $step5 ]; then
     train_set=train
     elayers=12
     expname=${train_set}_${elayers}_layers_init_libri_${backend}
@@ -172,6 +179,9 @@ if [ ! -z $step13 ]; then
         echo "stage 6: Resume network from epoch ${epoch_stage}"
         resume=${exp}/${expname}/results/snapshot.ep.${epoch_stage}
     fi
+    train_track1_config=conf/e2e_asr_transformer_only_accent.yaml
+    ## attention network, if you want to use attention to replace std+mean layer, you can cancel the comment
+    # train_track1_config=conf/e2e_asr_transformer_only_accent_with_attention.yaml
     ${cuda_cmd} --gpu ${ngpu} ${expdir}/train.log \
         asr_train.py \
         --config ${train_track1_config} \
@@ -198,20 +208,18 @@ if [ ! -z $step13 ]; then
         ${pretrained_model:+--pretrained-model $pretrained_model}
 
 fi
-if [ ! -z $step15 ]; then
+if [ ! -z $step6 ]; then
     echo "stage 2: Decoding"
     nj=100
-    for expname in train_3_layers_init_accent_verification_2_pytorch;do
-    for recog_set in test cv_all;do
-    decode_dir=decode_${recog_set}_${log_step}
-    use_valbest_average=true
+    for expname in train_3_layers_init_accent_pytorch;do
     expdir=$exp/$expname
-    
+    for recog_set in test cv_all;do
+    use_valbest_average=true
     if [[ $(get_yaml.py ${train_track1_config} model-module) = *transformer* ]]; then
         # Average ASR models
         if ${use_valbest_average}; then
             [ -f ${expdir}/results/model.val5.avg.best ] && rm ${expdir}/results/model.val5.avg.best
-            recog_model=model.val${n_average}_${log_step}.avg.best
+            recog_model=model.val${n_average}.avg.best
             opt="--log ${expdir}/results/log"
         else
             [ -f ${expdir}/results/model.last5.avg.best ] && rm ${expdir}/results/model.last5.avg.best
@@ -227,6 +235,7 @@ if [ ! -z $step15 ]; then
             --out ${expdir}/results/${recog_model} \
             --num ${n_average}
     fi
+    decode_dir=decode_${recog_set}
     # split data
     dev_root=$data/${recog_set}
     splitjson.py --parts ${nj} ${dev_root}/${train_set}_accent.json
@@ -241,6 +250,7 @@ if [ ! -z $step15 ]; then
         --recog-json ${dev_root}/split${nj}utt/${train_set}_accent.JOB.json \
         --result-label ${expdir}/${decode_dir}/${train_set}_accent.JOB.json \
         --model ${expdir}/results/${recog_model} 
+        
     concatjson.py ${expdir}/${decode_dir}/${train_set}_accent.*.json >  ${expdir}/${decode_dir}/${train_set}_accent.json
     python local/tools/parse_track1_jsons.py  ${expdir}/${decode_dir}/${train_set}_accent.json ${expdir}/${decode_dir}/result.txt
     python local/tools/parse_track1_jsons.py  ${expdir}/${decode_dir}/${train_set}_accent.json ${expdir}/${decode_dir}/result.txt > ${expdir}/${decode_dir}/acc.txt
