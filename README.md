@@ -25,7 +25,7 @@
     
   ### 2. step by step
     The overall code is divided into four parts, including feature extraction, JSON file generation, model training and decoding. 
-    The model training is divided into two parts, using ASR init and not using ASR init. 
+    The model training is divided into two parts, using ASR init(step05) and not using ASR init(step04). 
     You can control the steps by changing the value of the step variable. 
     egs: 
     
