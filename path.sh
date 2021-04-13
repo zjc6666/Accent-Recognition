@@ -1,5 +1,6 @@
 # MAIN_ROOT=/home/zhb502/w2020/espnet
 
+# change your espnet location
 MAIN_ROOT=/home/maison2/lid/zjc/espnet
 KALDI_ROOT=$MAIN_ROOT/tools/kaldi
 
