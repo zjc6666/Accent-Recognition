@@ -55,10 +55,10 @@ egs:
 ```
 ## notice
 ```
-  All scripts have three inputs: data exp step <br>
-  data: Directory for storing data preparation <br>
-  exp: Output directory during training <br>
-  steps: Control execution parameters <br>
+  All scripts have three inputs: data exp step
+  data: Directory for storing data preparation
+  exp: Output directory during training
+  steps: Control execution parameters
 ```  
   For librispeech data, you can prepare librispeech data into kaldi format, and then mix it with accent data to train the asr system
   
