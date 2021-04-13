@@ -7,9 +7,9 @@
 . ./cmd.sh || exit 1;
 
 
-cuda_cmd="slurm.pl --quiet --exclude=node0[2-7]"
-decode_cmd="slurm.pl --quiet --exclude=node0[1-4,8]"
-cmd="slurm.pl --quiet --exclude=node0[1-4]"
+cuda_cmd="slurm.pl --quiet"
+decode_cmd="slurm.pl --quiet"
+cmd="slurm.pl --quiet"
 # general configuration
 backend=pytorch
 steps=1
@@ -82,7 +82,7 @@ valid_set="valid"
 
 if [ ! -z $step01 ]; then
    echo "extracting filter-bank features and cmvn"
-   for i in $recog_set $valid_set $train_set;do # $train_dev $recog_set;do
+   for i in $recog_set $valid_set $train_set;do
       utils/fix_data_dir.sh $data/$i
       steps/make_fbank_pitch.sh --cmd "$cmd" --nj $nj --write_utt2num_frames true \
           $data/$i $data/$i/feats/log $data/$i/feats/ark
@@ -94,7 +94,7 @@ if [ ! -z $step01 ]; then
 fi
 
 if [ ! -z $step02 ]; then
-   echo "generate label file and dump features :E2E"
+   echo "dump features :E2E"
 
    for x in ${train_set} ;do
        dump.sh --cmd "$cmd" --nj $nj  --do_delta false \
@@ -105,7 +105,7 @@ if [ ! -z $step02 ]; then
        dump.sh --cmd "$cmd" --nj $nj  --do_delta false \
           $data/$x/feats.scp $data/${train_set}/cmvn.ark $data/$x/dump_${train_set}/log $data/$x/dump_${train_set}
    done
-   echo "step02 Generate label file and dump features for track2:E2E Done"   
+   echo "step02 dump features for track2:E2E Done"   
 fi
 
 dict=$data/lang/accent.dict
@@ -212,11 +212,9 @@ if [ ! -z $step6 ]; then
     echo "stage 2: Decoding"
     nj=100
     for expname in train_3_layers_init_accent_pytorch;do
-    for recog_set in test cv_all;do
-    decode_dir=decode_${recog_set}
-    use_valbest_average=true
     expdir=$exp/$expname
-    
+    for recog_set in test cv_all;do
+    use_valbest_average=true
     if [[ $(get_yaml.py ${train_track1_config} model-module) = *transformer* ]]; then
         # Average ASR models
         if ${use_valbest_average}; then
@@ -237,6 +235,7 @@ if [ ! -z $step6 ]; then
             --out ${expdir}/results/${recog_model} \
             --num ${n_average}
     fi
+    decode_dir=decode_${recog_set}
     # split data
     dev_root=$data/${recog_set}
     splitjson.py --parts ${nj} ${dev_root}/${train_set}_accent.json
@@ -251,6 +250,7 @@ if [ ! -z $step6 ]; then
         --recog-json ${dev_root}/split${nj}utt/${train_set}_accent.JOB.json \
         --result-label ${expdir}/${decode_dir}/${train_set}_accent.JOB.json \
         --model ${expdir}/results/${recog_model} 
+        
     concatjson.py ${expdir}/${decode_dir}/${train_set}_accent.*.json >  ${expdir}/${decode_dir}/${train_set}_accent.json
     python local/tools/parse_track1_jsons.py  ${expdir}/${decode_dir}/${train_set}_accent.json ${expdir}/${decode_dir}/result.txt
     python local/tools/parse_track1_jsons.py  ${expdir}/${decode_dir}/${train_set}_accent.json ${expdir}/${decode_dir}/result.txt > ${expdir}/${decode_dir}/acc.txt
