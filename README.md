@@ -22,8 +22,8 @@
     Before running, you need to first put the model file(models/e2e_asr_transformer_only_accent.py) to your espnet directory.
 ```
 eg: 
-move `models/e2e_asr_transformer_only_accent.py` to `/your espnet localtion/espnet/nets/pytorch_backend` 
-move `models/e2e_asr_transformer_only_accent_with_attention.py` to `/your espnet localtion/espnet/nets/pytorch_backend` 
+  move `models/e2e_asr_transformer_only_accent.py` to `/your espnet localtion/espnet/nets/pytorch_backend` 
+  move `models/e2e_asr_transformer_only_accent_with_attention.py` to `/your espnet localtion/espnet/nets/pytorch_backend` 
 ```
   2. step by step
     The overall code is divided into four parts, including feature extraction, JSON file generation, model training and decoding. 
@@ -32,11 +32,11 @@ move `models/e2e_asr_transformer_only_accent_with_attention.py` to `/your espnet
 
 ```
 egs: 
-bash run_only_accent.sh --nj 20 --steps 1-2
-bash run_only_accent.sh --nj 20 --steps 3
-bash run_only_accent.sh --nj 20 --steps 4
-bash run_only_accent.sh --nj 20 --steps 5
-bash run_only_accent.sh --nj 20 --steps 6
+  bash run_only_accent.sh --nj 20 --steps 1-2
+  bash run_only_accent.sh --nj 20 --steps 3
+  bash run_only_accent.sh --nj 20 --steps 4
+  bash run_only_accent.sh --nj 20 --steps 5
+  bash run_only_accent.sh --nj 20 --steps 6
 ```
 ## Transformer ASR system
     The purpose of training the asr model is to initialize the accent recogniton model.
@@ -44,20 +44,20 @@ bash run_only_accent.sh --nj 20 --steps 6
     You can directly execute the `run_accent160_asr.sh` script step by step.
     Features can directly use the features of single accent system(steps 01-02).
 ```   
-bash run_only_accent.sh --nj 20 --steps 1-2
-bash run_only_accent.sh --nj 20 --steps 3
-bash run_only_accent.sh --nj 20 --steps 4
-bash run_only_accent.sh --nj 20 --steps 5
-bash run_only_accent.sh --nj 20 --steps 7
-bash run_only_accent.sh --nj 20 --steps 8
-bash run_only_accent.sh --nj 20 --steps 9
+  bash run_only_accent.sh --nj 20 --steps 1-2
+  bash run_only_accent.sh --nj 20 --steps 3
+  bash run_only_accent.sh --nj 20 --steps 4
+  bash run_only_accent.sh --nj 20 --steps 5
+  bash run_only_accent.sh --nj 20 --steps 7
+  bash run_only_accent.sh --nj 20 --steps 8
+  bash run_only_accent.sh --nj 20 --steps 9
 ```
 ## notice
 ```
-All scripts have three inputs: data exp step <br>
-data: Directory for storing data preparation <br>
-exp: Output directory during training <br>
-steps: Control execution parameters <br>
+  All scripts have three inputs: data exp step <br>
+  data: Directory for storing data preparation <br>
+  exp: Output directory during training <br>
+  steps: Control execution parameters <br>
 ```  
   For librispeech data, you can prepare librispeech data into kaldi format, and then mix it with accent data to train the asr system
   
