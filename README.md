@@ -45,13 +45,13 @@ egs:
     You can directly execute the `run_accent160_asr.sh` script step by step.
     Features can directly use the features of single accent system(steps 01-02).
 ```   
-  bash run_only_accent.sh --nj 20 --steps 1-2
-  bash run_only_accent.sh --nj 20 --steps 3
-  bash run_only_accent.sh --nj 20 --steps 4
-  bash run_only_accent.sh --nj 20 --steps 5
-  bash run_only_accent.sh --nj 20 --steps 7
-  bash run_only_accent.sh --nj 20 --steps 8
-  bash run_only_accent.sh --nj 20 --steps 9
+  bash run_accent160_asr.sh --nj 20 --steps 1-2
+  bash run_accent160_asr.sh --nj 20 --steps 3
+  bash run_accent160_asr.sh --nj 20 --steps 4
+  bash run_accent160_asr.sh --nj 20 --steps 5
+  bash run_accent160_asr.sh --nj 20 --steps 7
+  bash run_accent160_asr.sh --nj 20 --steps 8
+  bash run_accent160_asr.sh --nj 20 --steps 9
 ```
 ## notice
 ```
