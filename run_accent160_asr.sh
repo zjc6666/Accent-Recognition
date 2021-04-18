@@ -86,16 +86,16 @@ if [ ! -z $step01 ]; then
 fi
 
 if [ ! -z $step02 ]; then
-   echo "generate label file and dump features for track2:E2E"
+   echo "step02 generate label file and dump features for track2:E2E"
 
    for x in ${train_set} ;do
        dump.sh --cmd "$cmd" --nj $nj  --do_delta false \
-          $data/$x/feats.scp $data/${train_set}/cmvn.ark $data/$x/dump/log $data/$x/dump # for track2 e2e training
+          $data/$x/feats.scp $data/${train_set}/cmvn.ark $data/$x/dump/log $data/$x/dump
    done
 
    for x in ${valid_set} $recog_set;do 
        dump.sh --cmd "$cmd" --nj $nj  --do_delta false \
-          $data/$x/feats.scp $data/${train_set}/cmvn.ark $data/$x/dump_${train_set}/log $data/$x/dump_${train_set} # for track2 e2e training
+          $data/$x/feats.scp $data/${train_set}/cmvn.ark $data/$x/dump_${train_set}/log $data/$x/dump_${train_set}
    done
    echo "step02 Generate label file and dump features for track2:E2E Done"   
 fi
@@ -104,7 +104,7 @@ bpe_set=$train_set
 bpe_model=$data/lang/$train_set/${train_set}_${bpemode}_${vocab_size}
 dict=$data/lang/$train_set/${train_set}_${bpemode}_${vocab_size}_units.txt
 if [ ! -z $step03 ]; then
-   echo "stage 03: Dictionary Preparation" 
+   echo "stage03: Dictionary Preparation" 
 
    [ -d $data/lang/$train_set ] || mkdir -p $data/lang/$train_set || exit;
    echo "<unk> 1" > ${dict}
@@ -113,32 +113,33 @@ if [ ! -z $step03 ]; then
 
    spm_train --input=$data/lang/$train_set/${train_set}_input.txt --vocab_size=${vocab_size} --model_type=${bpemode} --model_prefix=${bpe_model} --input_sentence_size=100000000
    spm_encode --model=${bpe_model}.model --output_format=piece < $data/lang/$train_set/${train_set}_input.txt | tr ' ' '\n' | sort | uniq | awk '{print $0 " " NR+1}' >> ${dict}
-   echo "stage 03: Dictionary Preparation Done"
+   echo "stage03: Dictionary Preparation Done"
 fi
 
 if [ ! -z $step04 ]; then
-    # make json labels
-    data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${train_set}/dump/feats.scp --bpecode ${bpe_model}.model \
-       $data/${train_set} ${dict} > ${data}/${train_set}/${train_set}_${bpemode}_${vocab_size}.json
+   echo "stage04: Make Json Labels"
+   # make json labels
+   data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${train_set}/dump/feats.scp --bpecode ${bpe_model}.model \
+      $data/${train_set} ${dict} > ${data}/${train_set}/${train_set}_${bpemode}_${vocab_size}.json
 
-    for i in test;do 
-       data2json.sh --nj 10 --cmd "${cmd}" --feat $data/$i/dump_${train_set}/feats.scp --bpecode ${bpe_model}.model \
-           $data/$i ${dict} > ${data}/$i/${train_set}_${bpemode}_${vocab_size}.json
-    done
-    echo "stage 04: Make Json Labels Done"
+   for i in test;do 
+      data2json.sh --nj 10 --cmd "${cmd}" --feat $data/$i/dump_${train_set}/feats.scp --bpecode ${bpe_model}.model \
+          $data/$i ${dict} > ${data}/$i/${train_set}_${bpemode}_${vocab_size}.json
+   done
+   echo "stage04: Make Json Labels Done"
 fi
 
 
 lmexpdir=${exp}/${train_set}_rmmlm_${bpemode}
 # train rnnlm 
 if [ ! -z $step06 ]; then
-    
+    echo "stage06: train rnnlm"
     lmdatadir=$exp/local/lm_${train_set}_${bpemode}
     [ -d $lmdatadir ] ||  mkdir -p $lmdatadir
     cut -f 2- -d" " $data/${train_set}/text | spm_encode --model=${bpe_model}.model --output_format=piece \
         > ${lmdatadir}/${train_set}.txt
-    cut -f 2- -d" " $data/${train_valid}/text | spm_encode --model=${bpe_model}.model --output_format=piece \
-        > ${lmdatadir}/${train_valid}.txt
+    cut -f 2- -d" " $data/${valid_set}/text | spm_encode --model=${bpe_model}.model --output_format=piece \
+        > ${lmdatadir}/${valid_set}.txt
  
     ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
         lm_train.py \
@@ -152,7 +153,7 @@ if [ ! -z $step06 ]; then
         --valid-label ${lmdatadir}/${valid_set}.txt \
         --resume ${lm_resume} \
         --dict ${dict}
-
+    echo "stage06: train rnnlm"
 fi
 
 if [ ! -z $step07 ]; then
@@ -161,10 +162,10 @@ if [ ! -z $step07 ]; then
     expdir=$exp/${expname}
     epoch_stage=0
     mkdir -p ${expdir}
-    echo "stage 2: Network Training"
+    echo "stage07: Network Training"
     ngpu=1
     if  [ ${epoch_stage} -gt 0 ]; then
-        echo "stage 6: Resume network from epoch ${epoch_stage}"
+        echo "stage07: Resume network from epoch ${epoch_stage}"
         resume=${exp}/${expname}/results/snapshot.ep.${epoch_stage}
     fi  
     
@@ -187,7 +188,7 @@ if [ ! -z $step07 ]; then
 fi
 
 if [ ! -z $step09 ]; then
-    echo "stage 3: Decoding"
+    echo "stage09: Decoding"
     nj=100
     for expname in train_12enc_6dec_verification_pytorch;do
     expdir=$exp/${expname}
@@ -243,5 +244,5 @@ if [ ! -z $step09 ]; then
     done
     done
     # done
-    echo "Finished"
+    echo "stage09 Decode Finished"
 fi
