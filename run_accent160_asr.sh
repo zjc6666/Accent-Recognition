@@ -132,8 +132,8 @@ fi
 
 lmexpdir=${exp}/${train_set}_rmmlm_${bpemode}
 # train rnnlm 
-if [ ! -z $step06 ]; then
-    echo "stage06: train rnnlm"
+if [ ! -z $step05 ]; then
+    echo "stage05: train rnnlm"
     lmdatadir=$exp/local/lm_${train_set}_${bpemode}
     [ -d $lmdatadir ] ||  mkdir -p $lmdatadir
     cut -f 2- -d" " $data/${train_set}/text | spm_encode --model=${bpe_model}.model --output_format=piece \
@@ -153,19 +153,19 @@ if [ ! -z $step06 ]; then
         --valid-label ${lmdatadir}/${valid_set}.txt \
         --resume ${lm_resume} \
         --dict ${dict}
-    echo "stage06: train rnnlm"
+    echo "stage05: train rnnlm"
 fi
 
-if [ ! -z $step07 ]; then
+if [ ! -z $step06 ]; then
     train_set=train
     expname=${train_set}_12enc_6dec_${backend}
     expdir=$exp/${expname}
     epoch_stage=0
     mkdir -p ${expdir}
-    echo "stage07: Network Training"
+    echo "stage06: Network Training"
     ngpu=1
     if  [ ${epoch_stage} -gt 0 ]; then
-        echo "stage07: Resume network from epoch ${epoch_stage}"
+        echo "stage06: Resume network from epoch ${epoch_stage}"
         resume=${exp}/${expname}/results/snapshot.ep.${epoch_stage}
     fi  
     
@@ -187,8 +187,8 @@ if [ ! -z $step07 ]; then
                 --valid-json $data/${valid_set}/${train_set}_${bpemode}_${vocab_size}.json
 fi
 
-if [ ! -z $step09 ]; then
-    echo "stage09: Decoding"
+if [ ! -z $step07 ]; then
+    echo "stage07: Decoding"
     nj=100
     for expname in train_12enc_6dec_verification_pytorch;do
     expdir=$exp/${expname}
@@ -244,5 +244,5 @@ if [ ! -z $step09 ]; then
     done
     done
     # done
-    echo "stage09 Decode Finished"
+    echo "stage07 Decode Finished"
 fi
