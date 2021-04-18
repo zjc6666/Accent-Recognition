@@ -113,7 +113,7 @@ dict=$data/lang/accent.dict
 if [ ! -z $step03 ]; then
     # make json labels
     data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${train_set}/dump/feats.scp  \
-       --text $data/$x/utt2accent --oov 8 $data/$x ${dict} > ${data}/${train_set}/${train_set}_accent.json
+       --text $data/$train_set/utt2accent --oov 8 $data/$train_set ${dict} > ${data}/${train_set}/${train_set}_accent.json
 
     for i in $recog_set $valid_set;do 
        data2json.sh --nj 10 --cmd "${cmd}" --feat $data/$i/dump_${train_set}/feats.scp \
