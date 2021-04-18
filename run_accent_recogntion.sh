@@ -119,7 +119,7 @@ if [ ! -z $step03 ]; then
        local/tools/data2json.sh --nj 10 --cmd "${cmd}" --feat $data/$x/dump_${train_set}/feats.scp \
            --text $data/$x/utt2accent --oov 8 $data/$x ${dict} > ${data}/$x/${train_set}_accent.json
     done
-    echo "stage 04: Make Json Labels Done"
+    echo "stage 03: Make Json Labels Done"
 fi
 
 epochs=30
