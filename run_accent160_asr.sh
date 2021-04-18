@@ -234,7 +234,7 @@ if [ ! -z $step09 ]; then
             --result-label ${expdir}/${decode_dir}/data.JOB.json \
             --model ${expdir}/results/${recog_model} #\
             # --rnnlm ${lmexpdir}/rnnlm.model.best
-        score_sclite.sh --bpe ${vocab_size} --bpemodel ${bpe_model}.model --wer true ${expdir}/${decode_dir} ${old_dict} 
+        score_sclite.sh --bpe ${vocab_size} --bpemodel ${bpe_model}.model --wer true ${expdir}/${decode_dir} ${dict} 
     )&
     pids+=($!) # store background pids
     done
