@@ -19,8 +19,8 @@
 
 ## Accent recognition system
   1. Model file preparation
-    `run_only_accent.sh` is used to train a single accent recognition model.
-    Before running, you need to first put the model file(models/e2e_asr_transformer_only_accent.py) to your espnet directory.
+    `run_accent.sh` is used to train a accent recognition model.
+    Before running, you need to first put the model file(models/e2e_asr_transformer_accent.py) to your espnet directory.
 ```
 eg: 
   move `models/e2e_asr_transformer_accent.py` to `/your espnet localtion/espnet/nets/pytorch_backend` 
@@ -33,17 +33,17 @@ eg:
 
 ```
 egs: 
-  bash run_only_accent.sh --nj 20 --steps 1-2 data exp
-  bash run_only_accent.sh --nj 20 --steps 3 data exp
-  bash run_only_accent.sh --nj 20 --steps 4 data exp
-  bash run_only_accent.sh --nj 20 --steps 6 data exp
+  bash run_accent.sh --nj 20 --steps 1-2 data exp
+  bash run_accent.sh --nj 20 --steps 3 data exp
+  bash run_accent.sh --nj 20 --steps 4 data exp
+  bash run_accent.sh --nj 20 --steps 6 data exp
 ```
   3. ASR initialization
   In order to get better results, the encoder of ASR model can be used to initialize the encoder of accent recognition model.
-  As in the `run_only_accent.sh` script, you can set the value of `pretrained_model` variable to you asr model path.
+  As in the `run_accent.sh` script, you can set the value of `pretrained_model` variable to you asr model path.
   Then use the following command to run.
 ```
-  bash run_only_accent.sh --nj 20 --steps 5 data exp
+  bash run_accent.sh --nj 20 --steps 5 data exp
 ```
 ## Transformer ASR system
     The purpose of training the asr model is to initialize the accent recogniton model.
