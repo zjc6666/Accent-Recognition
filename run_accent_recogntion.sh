@@ -164,7 +164,7 @@ if [ ! -z $step04 ]; then
         --valid-json $data/${valid_set}/${train_set}_accent.json
 fi
 
-# pretrained asr model
+# pretrained asr model, if you want to use asr initialization the accent recognition encoder, plase set the "pretrained_model" variable to you own path
 pretrained_model=/home/maison2/lid/zjc/w2020/AESRC2020/result/track2-accent-160/train_12enc_6dec_pytorch/results/model.val5.avg.best
 if [ ! -z $step05 ]; then
     train_set=train
