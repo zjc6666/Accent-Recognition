@@ -48,6 +48,7 @@ egs:
 ## Transformer ASR system
   The purpose of training the asr model is to initialize the accent recogniton model. Because ASR training is no different from normal transformer training, there is no need to prepare additional model files. You can directly execute the `run_accent160_asr.sh` script step by step. Features can directly use the features of single accent system(steps 01-02).
 ```   
+egs:
   bash run_accent160_asr.sh --nj 20 --steps 1-2 data exp
   bash run_accent160_asr.sh --nj 20 --steps 3 data exp
   bash run_accent160_asr.sh --nj 20 --steps 4 data exp
