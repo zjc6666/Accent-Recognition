@@ -4,12 +4,12 @@
 #  Apache 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
 
 . ./path.sh || exit 1;
-. ./cmd.sh || exit 1;
+# . ./cmd.sh || exit 1;
 
 
-cuda_cmd="slurm.pl --quiet"
-decode_cmd="slurm.pl --quiet"
-cmd="slurm.pl --quiet"
+# cuda_cmd="slurm.pl --quiet"
+# decode_cmd="slurm.pl --quiet"
+# cmd="slurm.pl --quiet"
 # general configuration
 backend=pytorch
 steps=1
