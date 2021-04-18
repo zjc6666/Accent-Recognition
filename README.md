@@ -53,7 +53,6 @@ egs:
   bash run_accent160_asr.sh --nj 20 --steps 4 data exp
   bash run_accent160_asr.sh --nj 20 --steps 5 data exp
   bash run_accent160_asr.sh --nj 20 --steps 7 data exp
-  bash run_accent160_asr.sh --nj 20 --steps 8 data exp
   bash run_accent160_asr.sh --nj 20 --steps 9 data exp
 ```
 ## notice
