@@ -46,7 +46,7 @@ egs:
   4. In addition, in order to better reproduce and avoid you training asr system again, I uploaded two ASR models, including `pretrained_model/accent160.val5.avg.best` and `pretrained_model/accent160_and_librispeech960.val5.avg.best`. One is trained use only accent160 data, the other is both use accent160 and librispeech960 data.
   You can use these two models by change the `pretrained_model` variable values. 
 ## Transformer ASR system
-The purpose of training the asr model is to initialize the accent recogniton model. Because ASR training is no different from normal transformer training, there is no need to prepare additional model files. You can directly execute the `run_accent160_asr.sh` script step by step. Features can directly use the features of single accent system(steps 01-02).
+  The purpose of training the asr model is to initialize the accent recogniton model. Because ASR training is no different from normal transformer training, there is no need to prepare additional model files. You can directly execute the `run_accent160_asr.sh` script step by step. Features can directly use the features of single accent system(steps 01-02).
 ```   
   bash run_accent160_asr.sh --nj 20 --steps 1-2 data exp
   bash run_accent160_asr.sh --nj 20 --steps 3 data exp
