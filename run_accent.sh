@@ -123,7 +123,7 @@ if [ ! -z $step03 ]; then
 fi
 
 epochs=30
-if [ ! -z $step4 ]; then
+if [ ! -z $step04 ]; then
     train_set=train
     elayers=3
     expname=${train_set}_${elayers}_layers_${backend}
@@ -166,7 +166,7 @@ fi
 
 # pretrained asr model
 pretrained_model=/home/maison2/lid/zjc/w2020/AESRC2020/result/track2-accent-160/train_12enc_6dec_pytorch/results/model.val5.avg.best
-if [ ! -z $step5 ]; then
+if [ ! -z $step05 ]; then
     train_set=train
     elayers=12
     expname=${train_set}_${elayers}_layers_init_libri_${backend}
@@ -208,7 +208,7 @@ if [ ! -z $step5 ]; then
         ${pretrained_model:+--pretrained-model $pretrained_model}
 
 fi
-if [ ! -z $step6 ]; then
+if [ ! -z $step06 ]; then
     echo "stage 2: Decoding"
     nj=100
     for expname in train_3_layers_init_accent_pytorch;do
