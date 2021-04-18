@@ -36,8 +36,14 @@ egs:
   bash run_only_accent.sh --nj 20 --steps 1-2 data exp
   bash run_only_accent.sh --nj 20 --steps 3 data exp
   bash run_only_accent.sh --nj 20 --steps 4 data exp
-  bash run_only_accent.sh --nj 20 --steps 5 data exp
   bash run_only_accent.sh --nj 20 --steps 6 data exp
+```
+  3. ASR initialization
+  In order to get better results, the encoder of ASR model can be used to initialize the encoder of accent recognition model.
+  As in the `run_only_accent.sh` script, you can set the value of `pretrained_model` variable to you asr model path.
+  Then use the following command to run.
+```
+  bash run_only_accent.sh --nj 20 --steps 5 data exp
 ```
 ## Transformer ASR system
     The purpose of training the asr model is to initialize the accent recogniton model.
