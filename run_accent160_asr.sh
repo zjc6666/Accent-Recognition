@@ -149,7 +149,7 @@ if [ ! -z $step06 ]; then
         --outdir ${lmexpdir} \
         --tensorboard-dir tensorboard/${lmexpname} \
         --train-label ${lmdatadir}/${train_set}.txt \
-        --valid-label ${lmdatadir}/${train_valid}.txt \
+        --valid-label ${lmdatadir}/${valid_set}.txt \
         --resume ${lm_resume} \
         --dict ${dict}
 
