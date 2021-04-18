@@ -81,7 +81,7 @@ valid_set="valid"
 
 
 if [ ! -z $step01 ]; then
-   echo "extracting filter-bank features and cmvn"
+   echo "step01 extracting filter-bank features and cmvn"
    for i in $recog_set $valid_set $train_set;do
       utils/fix_data_dir.sh $data/$i
       steps/make_fbank_pitch.sh --cmd "$cmd" --nj $nj --write_utt2num_frames true \
@@ -94,7 +94,7 @@ if [ ! -z $step01 ]; then
 fi
 
 if [ ! -z $step02 ]; then
-   echo "dump features :E2E"
+   echo "step01 02 dump features :E2E"
 
    for x in ${train_set} ;do
        dump.sh --cmd "$cmd" --nj $nj  --do_delta false \
@@ -109,8 +109,9 @@ if [ ! -z $step02 ]; then
 fi
 
 dict=$data/lang/accent.dict
-### prepare for track1
+### prepare for accent recogniton json file
 if [ ! -z $step03 ]; then
+    echo "stage 03: Make Json Labels"
     # make json labels
     local/tools/data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${train_set}/dump/feats.scp  \
        --text $data/$train_set/utt2accent --oov 8 $data/$train_set ${dict} > ${data}/${train_set}/${train_set}_accent.json
@@ -130,10 +131,10 @@ if [ ! -z $step04 ]; then
     expdir=$exp/${expname}
     epoch_stage=0
     mkdir -p ${expdir}
-    echo "stage 2: Network Training"
+    echo "stage 04: Network Training"
     ngpu=1
     if  [ ${epoch_stage} -gt 0 ]; then
-        echo "stage 6: Resume network from epoch ${epoch_stage}"
+        echo "stage 04: Resume network from epoch ${epoch_stage}"
         resume=${exp}/${expname}/results/snapshot.ep.${epoch_stage}
     fi
     train_track1_config=conf/e2e_asr_transformer_only_accent.yaml
@@ -173,10 +174,10 @@ if [ ! -z $step05 ]; then
     expdir=$exp/${expname}
     epoch_stage=0
     mkdir -p ${expdir}
-    echo "stage 2: Network Training"
+    echo "stage 05: Network Training"
     ngpu=1
     if  [ ${epoch_stage} -gt 0 ]; then
-        echo "stage 6: Resume network from epoch ${epoch_stage}"
+        echo "stage 05: Resume network from epoch ${epoch_stage}"
         resume=${exp}/${expname}/results/snapshot.ep.${epoch_stage}
     fi
     train_track1_config=conf/e2e_asr_transformer_only_accent.yaml
@@ -209,14 +210,14 @@ if [ ! -z $step05 ]; then
 
 fi
 if [ ! -z $step06 ]; then
-    echo "stage 2: Decoding"
+    echo "stage 06: Decoding"
     nj=100
     for expname in train_3_layers_init_accent_pytorch;do
     expdir=$exp/$expname
     for recog_set in test cv_all;do
     use_valbest_average=true
     if [[ $(get_yaml.py ${train_track1_config} model-module) = *transformer* ]]; then
-        # Average ASR models
+        # Average accent recognition models
         if ${use_valbest_average}; then
             [ -f ${expdir}/results/model.val5.avg.best ] && rm ${expdir}/results/model.val5.avg.best
             recog_model=model.val${n_average}.avg.best
@@ -256,6 +257,6 @@ if [ ! -z $step06 ]; then
     python local/tools/parse_track1_jsons.py  ${expdir}/${decode_dir}/${train_set}_accent.json ${expdir}/${decode_dir}/result.txt > ${expdir}/${decode_dir}/acc.txt
     done
     done
-    echo "Decoding finished"
+    echo "stage06 Decoding finished"
 fi
 
