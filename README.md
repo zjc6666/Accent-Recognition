@@ -17,7 +17,7 @@
     You can also use the `sed` command to replace the path in the wav.scp file with your path.
     Other files can remain unchanged, you can use it directly (eg, utt2IntLabel, utt2accent, text, utt2spk...).
 
-## Single task system
+## Accent recognition system
   1. Model file preparation
     `run_only_accent.sh` is used to train a single accent recognition model.
     Before running, you need to first put the model file(models/e2e_asr_transformer_only_accent.py) to your espnet directory.
