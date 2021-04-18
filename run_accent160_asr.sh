@@ -186,44 +186,6 @@ if [ ! -z $step07 ]; then
                 --valid-json $data/${valid_set}/${train_set}_${bpemode}_${vocab_size}.json
 fi
 
-# pretraind model 
-pretrained_model=/home/maison2/lid/zjc/w2020/AESRC2020/result/librispeech960-asr/libspeech960_12enc_6dec_pytorch/results/model.val5.avg.best
-expdir=$exp/${expname}
-if [ ! -z $step08 ]; then
-    epoch_stage=0
-    train_set=train
-    expname=${train_set}_12enc_6dec_init_accent_and_libri_${backend}
-    expdir=$exp/${expname}
-    mkdir -p ${expdir}
-    echo "stage 2: Network Training"
-    ngpu=1
-    if  [ ${epoch_stage} -gt 0 ]; then
-        echo "stage 6: Resume network from epoch ${epoch_stage}"
-        resume=${exp}/${expname}/results/snapshot.ep.${epoch_stage}
-    fi
-    ${cuda_cmd} --gpu $ngpu ${expdir}/train.log \
-         asr_train.py \
-                --config ${train_config} \
-                --preprocess-conf ${preprocess_config} \
-                --ngpu $ngpu \
-                --backend ${backend} \
-                --outdir ${expdir}/results \
-                --tensorboard-dir tensorboard/${expname} \
-                --debugmode ${debugmode} \
-                --dict ${old_dict} \
-                --debugdir ${expdir} \
-                --minibatches ${N} \
-                --verbose ${verbose} \
-                --resume ${resume} \
-                --train-json $data/${train_set}/${train_set}_${bpemode}_${vocab_size}.json \
-                --valid-json $data/${valid_set}/${train_set}_${bpemode}_${vocab_size}.json \
-                --n-iter-processes $ngpu \
-                --dec-init $pretrained_model \
-                --dec-init-mods='decoder.decoders' \
-                --enc-init $pretrained_model \
-                --enc-init-mods='encoder.'
-fi
-
 if [ ! -z $step09 ]; then
     echo "stage 3: Decoding"
     nj=100
