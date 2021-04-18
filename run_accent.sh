@@ -112,11 +112,11 @@ dict=$data/lang/accent.dict
 ### prepare for track1
 if [ ! -z $step03 ]; then
     # make json labels
-    data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${train_set}/dump/feats.scp  \
+    local/tools/data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${train_set}/dump/feats.scp  \
        --text $data/$train_set/utt2accent --oov 8 $data/$train_set ${dict} > ${data}/${train_set}/${train_set}_accent.json
 
     for x in $recog_set $valid_set;do 
-       data2json.sh --nj 10 --cmd "${cmd}" --feat $data/$x/dump_${train_set}/feats.scp \
+       local/tools/data2json.sh --nj 10 --cmd "${cmd}" --feat $data/$x/dump_${train_set}/feats.scp \
            --text $data/$x/utt2accent --oov 8 $data/$x ${dict} > ${data}/$x/${train_set}_accent.json
     done
     echo "stage 04: Make Json Labels Done"
