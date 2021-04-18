@@ -23,8 +23,8 @@
     Before running, you need to first put the model file(models/e2e_asr_transformer_only_accent.py) to your espnet directory.
 ```
 eg: 
-  move `models/e2e_asr_transformer_only_accent.py` to `/your espnet localtion/espnet/nets/pytorch_backend` 
-  move `models/e2e_asr_transformer_only_accent_with_attention.py` to `/your espnet localtion/espnet/nets/pytorch_backend` 
+  move `models/e2e_asr_transformer_accent.py` to `/your espnet localtion/espnet/nets/pytorch_backend` 
+  move `models/e2e_asr_transformer_accent_with_attention.py` to `/your espnet localtion/espnet/nets/pytorch_backend` 
 ```
   2. step by step
     The overall code is divided into four parts, including feature extraction, JSON file generation, model training and decoding. 
