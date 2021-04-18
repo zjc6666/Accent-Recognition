@@ -9,7 +9,7 @@
 
 # cuda_cmd="slurm.pl --quiet"
 # decode_cmd="slurm.pl --quiet"
-# cmd="slurm.pl --quiet"
+cmd="run.pl"
 # general configuration
 backend=pytorch
 steps=1
