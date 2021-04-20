@@ -66,6 +66,12 @@ egs:
   For librispeech data, you can prepare librispeech data into kaldi format, and then mix it with accent data to train the asr system
 ## Add codec (simulation narrow-band data)
   In reality, it is hard to obtain sufficient domain specific real telephony data to train acoustic models due to data privacy consideration. So we employ diversified audio codecs simulation based data augmentation method to train telephony speech recognition system.<br>
-  In this study, we use AESRC accent data as wide-band data, we first down-sample the 16 kHz accent data to the 8 kH. For simulate narrow-band data, we select randomly from the full list of codecs, and using FFMPEG tools convert it to narrow-band data.
+  In this study, we use AESRC accent data as wide-band data, we first down-sample the 16 kHz accent data to the 8 kH. For simulate narrow-band data, we select randomly from the full list of codecs, and using FFMPEG tools convert it to narrow-band data.<br>
+  For specific implementation, you can refer to `add-codec/add-codec.sh` script, but before you run it, you must change the value `"/home4/hhx502/w2019/ffmpeg_source/bin/ffmpeg"` in add-codec/scripts/add-codec-with-ffmpeg.pl to you ffmpeg path. Then you should modify the value of `data_set` and `source_dir` variable in the `add-codec/add-codec.sh` script. After the first two steps, you can run it directly<br>
+```
+egs:
+  bash add-codec.sh
+```
+  
   
   
