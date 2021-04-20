@@ -1,5 +1,0 @@
-An example:
-  ./programs/codetransform.pl test.txt
-
-Then 
-  The result named test.txt_roman will be generated.

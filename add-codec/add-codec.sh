@@ -6,6 +6,8 @@
 #####################
 nj=10
 steps=1,2
+# cmd="slurm.pl --quiet --exclude=node0[3-9]"
+# train_cmd="slurm.pl --quiet --exclude=node0[3-9]"
 cmd="run.pl"
 ###------------------------------------------------
 
@@ -69,4 +71,5 @@ if [ ! -z $step02 ]; then
    done
    echo -e "\n ##LOG [step 2] codec data ended @ `date`\n"
 fi
+
 
