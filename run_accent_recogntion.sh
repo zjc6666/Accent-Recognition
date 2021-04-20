@@ -205,7 +205,7 @@ if [ ! -z $step05 ]; then
         --dict ${dict} \
         --num-save-ctc 0 \
         --train-json $data/${train_set}/${train_set}_accent.json \
-        --valid-json $data/${train_valid}/${train_set}_accent.json \
+        --valid-json $data/${valid_set}/${train_set}_accent.json \
         ${pretrained_model:+--pretrained-model $pretrained_model}
 
 fi
