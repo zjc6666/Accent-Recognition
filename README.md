@@ -66,6 +66,6 @@ egs:
   For librispeech data, you can prepare librispeech data into kaldi format, and then mix it with accent data to train the asr system
 ## Add codec (simulation narrow-band data)
   In reality, it is hard to obtain sufficient domain specific real telephony data to train acoustic models due to data privacy consideration. So we employ diversified audio codecs simulation based data augmentation method to train telephony speech recognition system.
-  We first down-sample the 16 kHz data to the 8 kHz data, we then pass the down-sampled data through various categories of audio codecs to simulate the real channel distortion.
+  In this study, we use AESRC accent data as wide-band data, we first down-sample the 16 kHz accent data to the 8 kH. For simulate narrow-band data, we select randomly from the full list of codecs, and using FFMPEG tools convert it to narrow-band data.
   
   
