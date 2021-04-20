@@ -1,26 +1,18 @@
 #!/bin/bash
-#####################
-#  
-#
-#
-#####################
+
 nj=10
 steps=1,2
 # cmd="slurm.pl --quiet --exclude=node0[3-9]"
 # train_cmd="slurm.pl --quiet --exclude=node0[3-9]"
 cmd="run.pl"
 ###------------------------------------------------
-
 # end option
-
 echo 
 echo "$0 $@"
 echo
-
 set -e
 
 . path.sh
-
 . parse_options.sh || exit 1
 
 steps=$(echo $steps | perl -e '$steps=<STDIN>;  $has_format = 0;
@@ -32,17 +24,16 @@ steps=$(echo $steps | perl -e '$steps=<STDIN>;  $has_format = 0;
 
 if [ ! -z "$steps" ]; then
   for x in $(echo $steps|sed 's/[,:]/ /g'); do
-  index=$(printf "%02d" $x);
-  declare step$index=1
+    index=$(printf "%02d" $x);
+    declare step$index=1
   done
 fi
 data_set=train
 source_dir=/home/maison2/lid/zjc/w2021/add-codecs
 
 sample_rate=8000
-codec_set="train"
-# down sample
 
+# down sample
 if [ ! -z $step01 ]; then
   echo -e "\n ##LOG [step 1] down-sample to 8k data start @ `date`\n"
   for x in ${train_set};do
