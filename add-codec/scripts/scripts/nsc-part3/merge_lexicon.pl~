@@ -1,0 +1,40 @@
+#!/usr/bin/perl -w
+use strict;
+use utf8;
+use open qw(:std :utf8);
+
+
+my $numArgs = scalar @ARGV;
+if ($numArgs != 1) {
+  die "\nExample: cat lex.txt | $0 lex2.txt \n\n";
+}
+my ($lex_file) = @ARGV;
+
+# begin sub
+sub LoadVocab {
+  my ($dict_file, $vocab) = @_;
+  open(F, "$dict_file") or die;
+  while(<F>) {
+    chomp;
+    m/(\S+)\s+(.*)/g or next;
+    my $entry = sprintf("%s\t%s", $1, $2);
+    print "$entry\n";
+    $$vocab{$entry} ++;
+  }
+  close F;
+}
+# end sub
+my %vocab = ();
+LoadVocab($lex_file, \%vocab);
+print STDERR "## LOG ($0): done with original lexicon ...\n";
+print STDERR "## LOG ($0): stdin expected ...\n";
+while(<STDIN>) {
+  chomp;
+  m/(\S+)\s+(.*)/g or next;
+  my $entry = sprintf("%s\t%s", $1, $2);
+  if (not exists $vocab{$entry}) {
+    $vocab{$entry} ++;
+    print "$entry\n";
+  }
+}
+print STDERR "## LOG ($0): stdin ended ...\n";

@@ -1,0 +1,79 @@
+#!/usr/bin/perl -w
+use strict;
+use utf8;
+use open qw(:std :utf8);
+use Getopt::Long;
+
+# begin sub
+sub InsertVocab {
+  my ($vocab, $word, $pron) = @_;
+  $pron =~ s:\s+: :g; $pron =~ s:^\s+::g; $pron =~ s:\s+$::g; 
+  if (exists $$vocab{$word}) {
+    my $pronVocab = $$vocab{$word};
+    if (not exists $$pronVocab{$pron}) {
+       $$pronVocab{$pron} ++;
+    }
+  } else {
+    my %temp = ();
+    my $pronVocab = $$vocab{$word} = \%temp;
+    $$pronVocab{$pron} ++;
+  }
+}
+sub LoadVocab {
+  my ($inFile, $vocab) = @_;
+  open (F, "$inFile") or die;
+  while(<F>) {
+    chomp;
+    m:^(\S+)\s*(.*)$:g or next;
+    my ($word, $pron) = ($1, $2);
+    InsertVocab($vocab, $word, $pron);
+  }
+  close F;
+}
+# end sub
+
+my $from = 1;
+GetOptions("from=i" => \$from) or die;
+my $numArgs = scalar @ARGV;
+if ($numArgs != 3) {
+  my $example = <<EOF;
+
+ # from: determine the location of the first world to check for each input line,
+ #       this is useful in case of dealing with kaldi format text (default 1).
+ # By Haihua Xu TLatNTU.
+
+ Usage example: cat text | $0 --from=$from lexicon.txt oov-count.txt oov-utt.txt
+ 
+EOF
+  die $example;
+}
+
+my ($lexFile, $oov_count_file, $oov_utterance_file) = @ARGV;
+my %vocab = ();
+my %oovVocab = ();
+LoadVocab($lexFile, \%vocab);
+my %oov_utt_tab = ();
+while(<STDIN>) {
+  chomp;
+  my $utterance = $_;
+  my @A = split(/\s+/);
+  for(my $i = $from - 1; $i < scalar @A; $i++) {
+    my $word = $A[$i];
+    if(not exists $vocab{$word}) {
+      $oovVocab{$word} ++;
+      if (not exists $oov_utt_tab{$word}) {
+	$oov_utt_tab{$word} = $utterance;
+      }
+    }
+  }
+}
+open(F, "|cat - >$oov_count_file") or die "## ERROR ($0): cannot open file '$oov_count_file' to write ...\n";
+open(UTT, "|cat - >$oov_utterance_file") or die "## ERROR ($0): cannot open file '$oov_utterance_file' to write ...\n";
+foreach my $word (sort {$oovVocab{$b} <=> $oovVocab{$a}}  keys%oovVocab) {
+  print F "$word\t$oovVocab{$word}\n";
+  if (exists $oov_utt_tab{$word}) {
+    print UTT "$word\t$oovVocab{$word}\t$oov_utt_tab{$word}\n";
+  }
+}
+close F;
+close UTT;

@@ -1,0 +1,27 @@
+-ab 4.75k -f amr
+-ab 5.90k -f amr
+-ab 7.40k -f amr
+-ab 10.20k -f amr
+-ab 12.20k -f amr
+-b:a 4.5k  -c:a libopus -f ogg
+-b:a 5.5k  -c:a libopus -f ogg
+-b:a 7.7k  -c:a libopus -f ogg
+-b:a 9.5k  -c:a libopus -f ogg
+-b:a 12.5k  -c:a libopus -f ogg
+-b:a 16.0k  -c:a libopus -f ogg
+-b:a 32.0k  -c:a libopus -f ogg
+-b:a 16k    -acodec g726 -f wav
+-b:a 24k    -acodec g726 -f wav
+-b:a 32k    -acodec g726 -f wav
+-acodec g722 -f wav
+-acodec g723_1 -b:a 6.3k -f wav
+-acodec g722 -ab 4.75k -f wav 
+-acodec g722 -ab 5.15k -f wav
+-acodec g722 -ab 5.90k -f wav
+-acodec g722 -ab 6.6k -f wav
+-acodec g722 -ab 6.70k -f wav
+-acodec g722 -ab 7.40k -f wav
+-acodec g722 -ab 7.95k  -f wav
+-acodec g722 -ab 10.20k -f wav
+-acodec g722 -ab 12.20k -f wav
+-acodec pcm_alaw -f wav
