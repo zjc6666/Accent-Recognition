@@ -212,6 +212,7 @@ fi
 if [ ! -z $step06 ]; then
     echo "stage 06: Decoding"
     nj=100
+    max_epoch=5
     for expname in train_3_layers_init_accent_pytorch;do
     expdir=$exp/$expname
     for recog_set in test cv_all;do
@@ -229,12 +230,13 @@ if [ ! -z $step06 ]; then
         fi
         # recog_model=model.acc.best
         echo "$recog_model"
-        average_checkpoints.py \
+        local/tools/average_max_epoch_checkpoints.py \
             ${opt} \
             --backend ${backend} \
             --snapshots ${expdir}/results/snapshot.ep.* \
             --out ${expdir}/results/${recog_model} \
-            --num ${n_average}
+            --num ${n_average} \
+            --max-epoch ${max_epoch}
     fi
     decode_dir=decode_${recog_set}
     # split data
