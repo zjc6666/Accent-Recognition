@@ -45,6 +45,7 @@ egs:
 ```
   4. In addition, in order to better reproduce and avoid you training asr system again, I uploaded two ASR models, including `pretrained_model/accent160.val5.avg.best` and `pretrained_model/accent160_and_librispeech960.val5.avg.best`. One is trained use only accent160 data, the other is both use accent160 and librispeech960 data.
   You can use these two models by change the `pretrained_model` variable values. 
+  5. In the experiment, we found when run too many epochs will lead to over fitting. Similarly, we also discuss how many epochs are used to decode the data to get the best result. We find that in the accent classification system, only using 10 epochs can get better results without using ASR initialization. When using ASR initialization, using 5 epochs can get better results. At the same time, You can use different epoch decoding by changing the `max_epoch` variable in `step06`. You can also change the `max_epoch` variable to find out how many epoch models produce the best results.
 ## Transformer ASR system
   The purpose of training the asr model is to initialize the accent recogniton model. Because ASR training is no different from normal transformer training, there is no need to prepare additional model files. You can directly execute the `run_accent160_asr.sh` script step by step. Features can directly use the features of single accent system(steps 01-02).
 ```   
