@@ -230,7 +230,7 @@ if [ ! -z $step06 ]; then
         fi
         # recog_model=model.acc.best
         echo "$recog_model"
-        local/tools/average_max_epoch_checkpoints.py \
+        python3 local/tools/average_max_epoch_checkpoints.py \
             ${opt} \
             --backend ${backend} \
             --snapshots ${expdir}/results/snapshot.ep.* \
@@ -255,8 +255,8 @@ if [ ! -z $step06 ]; then
         --model ${expdir}/results/${recog_model} 
         
     concatjson.py ${expdir}/${decode_dir}/${train_set}_accent.*.json >  ${expdir}/${decode_dir}/${train_set}_accent.json
-    python local/tools/parse_track1_jsons.py  ${expdir}/${decode_dir}/${train_set}_accent.json ${expdir}/${decode_dir}/result.txt
-    python local/tools/parse_track1_jsons.py  ${expdir}/${decode_dir}/${train_set}_accent.json ${expdir}/${decode_dir}/result.txt > ${expdir}/${decode_dir}/acc.txt
+    python3 local/tools/parse_track1_jsons.py  ${expdir}/${decode_dir}/${train_set}_accent.json ${expdir}/${decode_dir}/result.txt
+    python3 local/tools/parse_track1_jsons.py  ${expdir}/${decode_dir}/${train_set}_accent.json ${expdir}/${decode_dir}/result.txt > ${expdir}/${decode_dir}/acc.txt
     done
     done
     echo "stage06 Decoding finished"
