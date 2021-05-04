@@ -94,34 +94,32 @@ if [ ! -z $step01 ]; then
 fi
 
 if [ ! -z $step02 ]; then
-   echo "step01 02 dump features :E2E"
-
-   for x in ${train_set} ;do
-       dump.sh --cmd "$cmd" --nj $nj  --do_delta false \
-          $data/$x/feats.scp $data/${train_set}/cmvn.ark $data/$x/dump/log $data/$x/dump 
-   done
-
-   for x in ${valid_set} $recog_set;do 
-       dump.sh --cmd "$cmd" --nj $nj  --do_delta false \
-          $data/$x/feats.scp $data/${train_set}/cmvn.ark $data/$x/dump_${train_set}/log $data/$x/dump_${train_set}
-   done
-   echo "step02 dump features for track2:E2E Done"   
+    for x in $train_set $valid_set $recog_set;do
+        awk '{printf "%s %s\n", $1, $1 }' $data/$x/text > $data/$x/spk2utt.utt
+        cp $data/$x/spk2utt.utt $data/$x/utt2spk.utt
+        compute-cmvn-stats --spk2utt=ark:$data/$x/spk2utt.utt scp:$data/$x/feats.scp \
+            ark,scp:$data/$x/cmvn_utt.ark,$data/$x/cmvn_utt.scp
+        local/tools/dump_spk_yzl23.sh --cmd "$cmd" --nj 20 \
+            $data/$x/feats.scp $data/$x/cmvn_utt.scp \
+            $data/$x/dump_utt/log $data/$x/dump_utt $data/$x/utt2spk.utt
+    done
+    echo "### step 02 dump utt Done"
 fi
-
 dict=$data/lang/accent.dict
 ### prepare for accent recogniton json file
 if [ ! -z $step03 ]; then
     echo "stage 03: Make Json Labels"
     # make json labels
-    local/tools/data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${train_set}/dump/feats.scp  \
-       --text $data/$train_set/utt2accent --oov 8 $data/$train_set ${dict} > ${data}/${train_set}/${train_set}_accent.json
+    local/tools/data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${train_set}/dump_utt/feats.scp  \
+       --text $data/$train_set/utt2accent --oov 8 $data/$train_set ${dict} > ${data}/${train_set}_utt_accent.json
 
-    for x in $recog_set $valid_set;do 
-       local/tools/data2json.sh --nj 10 --cmd "${cmd}" --feat $data/$x/dump_${train_set}/feats.scp \
-           --text $data/$x/utt2accent --oov 8 $data/$x ${dict} > ${data}/$x/${train_set}_accent.json
+    for x in $recog_set $valid_set;do
+       local/tools/data2json.sh --nj 10 --cmd "${cmd}" --feat $data/$x/dump_utt/feats.scp \
+           --text $data/$x/utt2accent --oov 8 $data/$x ${dict} > ${data}/$x/${train_set}_utt_accent.json
     done
     echo "stage 03: Make Json Labels Done"
 fi
+
 
 epochs=30
 if [ ! -z $step04 ]; then
@@ -161,8 +159,8 @@ if [ ! -z $step04 ]; then
         --batch-size ${batch_size} \
         --dict ${dict} \
         --num-save-ctc 0 \
-        --train-json $data/${train_set}/${train_set}_accent.json \
-        --valid-json $data/${valid_set}/${train_set}_accent.json
+        --train-json $data/${train_set}/${train_set}_utt_accent.json \
+        --valid-json $data/${valid_set}/${train_set}_utt_accent.json
 fi
 
 # pretrained asr model, if you want to use asr initialization the accent recognition encoder, plase set the "pretrained_model" variable to you own path
@@ -204,8 +202,8 @@ if [ ! -z $step05 ]; then
         --batch-size ${batch_size} \
         --dict ${dict} \
         --num-save-ctc 0 \
-        --train-json $data/${train_set}/${train_set}_accent.json \
-        --valid-json $data/${valid_set}/${train_set}_accent.json \
+        --train-json $data/${train_set}/${train_set}_utt_accent.json \
+        --valid-json $data/${valid_set}/${train_set}_utt_accent.json \
         ${pretrained_model:+--pretrained-model $pretrained_model}
 
 fi
@@ -241,7 +239,7 @@ if [ ! -z $step06 ]; then
     decode_dir=decode_${recog_set}
     # split data
     dev_root=$data/${recog_set}
-    splitjson.py --parts ${nj} ${dev_root}/${train_set}_accent.json
+    splitjson.py --parts ${nj} ${dev_root}/${train_set}_utt_accent.json
     #### use CPU for decoding
     ngpu=0
 
@@ -250,11 +248,11 @@ if [ ! -z $step06 ]; then
         --ngpu ${ngpu} \
         --backend ${backend} \
         --batchsize 0 \
-        --recog-json ${dev_root}/split${nj}utt/${train_set}_accent.JOB.json \
-        --result-label ${expdir}/${decode_dir}/${train_set}_accent.JOB.json \
+        --recog-json ${dev_root}/split${nj}utt/${train_set}_utt_accent.JOB.json \
+        --result-label ${expdir}/${decode_dir}/${train_set}_utt_accent.JOB.json \
         --model ${expdir}/results/${recog_model} 
         
-    concatjson.py ${expdir}/${decode_dir}/${train_set}_accent.*.json >  ${expdir}/${decode_dir}/${train_set}_accent.json
+    concatjson.py ${expdir}/${decode_dir}/${train_set}_utt_accent.*.json >  ${expdir}/${decode_dir}/${train_set}_accent.json
     python3 local/tools/parse_track1_jsons.py  ${expdir}/${decode_dir}/${train_set}_accent.json ${expdir}/${decode_dir}/result.txt
     python3 local/tools/parse_track1_jsons.py  ${expdir}/${decode_dir}/${train_set}_accent.json ${expdir}/${decode_dir}/result.txt > ${expdir}/${decode_dir}/acc.txt
     done
