@@ -74,7 +74,8 @@ egs:
   bash add-codec.sh
 ```
 ## Results
-| Model                       | pooling    |  Init          	|Before   |   	      | 5 epoch |  	        |10 epoch | 	        |
+
+| Model                       | pooling    |  Init          	|    	 Before         |     5 epoch	        |     10 epoch   	    |
 |-----------------------------|----------- |---------------   |--------	|----------	|--------	|---------	|--------	|----------	|
 |                             |            |      	          | DEV 	  | TEST     	| DEV 	  | TEST    	| DEV   	|TEST     	|
 | Transformer-12L             | Mean+Std   | ARSRC           	| 78.6   	| 66.6     	| 78    	| 70.8     	| 77.1    | 68      	|
