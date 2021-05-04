@@ -73,7 +73,12 @@ egs:
 egs:
   bash add-codec.sh
 ```
-## Results![Uploading 图片1.png…]()
+## Results
+| Model                       | pooling    |  Init          	|Before   |   	      | 5 epoch |  	        |10 epoch | 	        |
+|-----------------------------|----------- |---------------   |--------	|----------	|--------	|---------	|--------	|----------	|
+|                             |            |      	          | DEV 	  | TEST     	| DEV 	  | TEST    	| DEV   	|TEST     	|
+| Transformer-12L             | Mean+Std   | ARSRC           	| 78.6   	| 66.6     	| 78    	| 70.8     	| 77.1    | 68      	|
+| Transformer-12L             | Mean+Std   | Librispeech    	| 76.2   	| 70      	| 75.3   	| 68.9     	| 75.2    | 68      	|
 
 
 
