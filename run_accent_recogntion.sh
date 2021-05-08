@@ -111,7 +111,7 @@ if [ ! -z $step03 ]; then
     echo "stage 03: Make Json Labels"
     # make json labels
     local/tools/data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${train_set}/dump_utt/feats.scp  \
-       --text $data/$train_set/utt2accent --oov 8 $data/$train_set ${dict} > ${data}/${train_set}_utt_accent.json
+       --text $data/$train_set/utt2accent --oov 8 $data/$train_set ${dict} > ${data}/${train_set}/${train_set}_utt_accent.json
 
     for x in $recog_set $valid_set;do
        local/tools/data2json.sh --nj 10 --cmd "${cmd}" --feat $data/$x/dump_utt/feats.scp \
