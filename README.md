@@ -77,16 +77,4 @@ egs:
 Because the model file trained with the old version(Espnet-0.9.0) has been deleted, the results of the first five epochs in 5 cannot be tested, so only the results in D1 are listed.
 In the new version (Espnet-0.9.7) , we used narrow band data and wide band data separately for training respectively. We tested the results of setting max_ epoch=5 and max_epoch=10.
 The results are shown in Table 1 and table 2 respectively.
-![image](https://user-images.githubusercontent.com/36856753/117543689-744ce200-b050-11eb-9ea1-c648c32d68cb.png)
-
-| Model                       | pooling    |  Init          	| Before  |       |5 epoch |	     |10 epoch  | 	    |
-|-----------------------------|----------- |---------------   |-------  |-------|------  |------ |---------	|-----	|
-|                             |            |      	          | DEV 	  | TEST  | DEV 	 | TEST  | DEV   	  |TEST   |
-| Transformer-12L             | Mean+Std   | ARSRC           	| 78.6    | 66.6  | 78     | 70.8  | 77.1     | 68    |
-| Transformer-12L             | Mean+Std   | Librispeech    	| 76.2    | 70    | 75.3   | 68.9  | 75.2     | 68    |
-
-
-
-  
-  
-  
+![image](https://user-images.githubusercontent.com/36856753/117543726-9e9e9f80-b050-11eb-8bd2-f68d5692ce09.png)
