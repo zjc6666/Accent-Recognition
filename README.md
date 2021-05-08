@@ -74,6 +74,10 @@ egs:
   bash add-codec.sh
 ```
 ## Results
+Because the model file trained with the old version(Espnet-0.9.0) has been deleted, the results of the first five epochs in 5 cannot be tested, so only the results in D1 are listed.
+In the new version (Espnet-0.9.7) , we used narrow band data and wide band data separately for training respectively. We tested the results of setting max_ epoch=5 and max_epoch=10.
+The results are shown in Table 1 and table 2 respectively.
+![image](https://user-images.githubusercontent.com/36856753/117543689-744ce200-b050-11eb-9ea1-c648c32d68cb.png)
 
 | Model                       | pooling    |  Init          	| Before  |       |5 epoch |	     |10 epoch  | 	    |
 |-----------------------------|----------- |---------------   |-------  |-------|------  |------ |---------	|-----	|
