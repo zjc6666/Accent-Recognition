@@ -78,6 +78,6 @@ Because the model file trained with the old version(Espnet-0.9.0) has been delet
 In the new version (Espnet-0.9.7) , we used narrow band data and wide band data separately for training respectively. We tested the results of setting max_ epoch=5 and max_epoch=10. <br>
 The results are shown in Table 1 and table 2 respectively (max_epoch=5 or max_epoch=10).
 From the results, we can see that only training five epochs can get better results.
-![image](https://user-images.githubusercontent.com/36856753/117543726-9e9e9f80-b050-11eb-8bd2-f68d5692ce09.png)
+![image](https://user-images.githubusercontent.com/36856753/117558181-9294fb00-b0ad-11eb-9fcd-6a1a0f008c1a.png)
 ![image](https://user-images.githubusercontent.com/36856753/117558159-4cd83280-b0ad-11eb-888e-7a715324a59f.png)
 
