@@ -122,9 +122,9 @@ if [ ! -z $step04 ]; then
    data2json.sh --nj $nj --cmd "${cmd}" --feat $data/${train_set}/dump/feats.scp --bpecode ${bpe_model}.model \
       $data/${train_set} ${dict} > ${data}/${train_set}/${train_set}_${bpemode}_${vocab_size}.json
 
-   for i in test;do 
-      data2json.sh --nj 10 --cmd "${cmd}" --feat $data/$i/dump_${train_set}/feats.scp --bpecode ${bpe_model}.model \
-          $data/$i ${dict} > ${data}/$i/${train_set}_${bpemode}_${vocab_size}.json
+   for x in $recog_set $valid_set;do 
+      data2json.sh --nj 10 --cmd "${cmd}" --feat $data/$x/dump_${train_set}/feats.scp --bpecode ${bpe_model}.model \
+          $data/$x ${dict} > ${data}/$x/${train_set}_${bpemode}_${vocab_size}.json
    done
    echo "stage04: Make Json Labels Done"
 fi
