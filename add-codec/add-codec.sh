@@ -28,7 +28,7 @@ if [ ! -z "$steps" ]; then
     declare step$index=1
   done
 fi
-data_set=train
+train_set=train
 source_dir=/home/maison2/lid/zjc/w2021/add-codecs
 
 sample_rate=8000
